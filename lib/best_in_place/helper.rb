@@ -113,6 +113,7 @@ module BestInPlace
         object.send(field).to_s.presence || ''
       else
         object.send(field).to_s
+        #''
       end
     end
 
