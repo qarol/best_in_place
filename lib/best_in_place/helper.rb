@@ -86,8 +86,6 @@ module BestInPlace
 
   private
     def build_value_for(object, field, opts)
-      is_blank = object.send(field).blank?
-
       klass = if object.respond_to?(:id)
         "#{object.class}_#{object.id}"
       else
@@ -96,11 +94,11 @@ module BestInPlace
 
       if opts[:display_as]
         BestInPlace::DisplayMethods.add_model_method(klass, field, opts[:display_as])
-        object.send(opts[:display_as]).to_s unless is_blank
+        object.send(opts[:display_as]).to_s
 
       elsif opts[:display_with].try(:is_a?, Proc)
         BestInPlace::DisplayMethods.add_helper_proc(klass, field, opts[:display_with])
-        opts[:display_with].call(object.send(field)) unless is_blank
+        opts[:display_with].call(object.send(field))
       elsif opts[:display_with]
         BestInPlace::DisplayMethods.add_helper_method(klass, field, opts[:display_with], opts[:helper_options])
         if opts[:helper_options]
@@ -109,8 +107,6 @@ module BestInPlace
           BestInPlace::ViewHelpers.send(opts[:display_with], object.send(field))
         end
 
-      elsunless is_blank
-        object.send(field).to_s.presence || ''
       else
         object.send(field).to_s
         #''
